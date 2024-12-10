@@ -2,7 +2,7 @@
 
 Talk by [Mine Dogucu](https://www.minedogucu.com/) given at the Department of Statistics, University of Auckland on 2024-12-11
 
-Slides of the talk can be accessed online at [mdogucu.github.io/auckland-24](https://mdogucu.github.io/auckland-24)
+Slides of the talk can be accessed online at [mdogucu.github.io/auckland-2024](https://mdogucu.github.io/auckland-2024)
 
 ## Abstract
 

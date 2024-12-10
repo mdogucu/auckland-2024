@@ -3,7 +3,7 @@ title: "Teaching and Learning Bayesian Statistics with {bayesrules}"
 author: "Mine Dogucu, PhD <br> University of California Irvine"
 date: "2024-12-11"
 subtitle: "Talk at the Department of Statistics, University of Auckland"
-footer: "mdogucu.github.io/auckland-24"
+footer: "mdogucu.github.io/auckland-2024"
 format: 
   revealjs:
     slide-number: true
