@@ -471,9 +471,314 @@ readxl::read_xlsx("accessibility-checklist.xlsx") %>%
   
 ```
 
-##
+#
 
 [Dogucu, M., Johnson, A. A., & Ott, M. (2023). Framework for Accessible and Inclusive Teaching Materials for Statistics and Data Science Courses. Journal of Statistics and Data Science Education, 31(2), 144–150. https://doi.org/10.1080/26939169.2023.2165988](https://www.tandfonline.com/doi/full/10.1080/26939169.2023.2165988)
+
+# R packages
+
+#
+
+:::{.font50}
+`r fontawesome::fa(name = "github")` <a href = "http://github.com/bayes-rules/bayesrules">library(bayesrules)</a> 
+
+:::
+
+```{r eval=FALSE}
+devtools::install_github("bayes-rules/bayesrules")
+```
+
+##
+
+:::: {.columns}
+
+::: {.column width="50%"}
+
+```{r fig.align='center', fig.alt="X axis reads pi with values from 0 to 1. Y axis reads f of pi). The curve of the graph has a high peak on the y-axis when pi equals to 0.25. The y-values are almost zero when pi is greater than 0.70."}
+plot_beta(alpha = 3, beta = 8)
+```
+
+
+:::
+
+::: {.column width="50%"}
+
+```{r fig.align='center', fig.alt="X axis reads pi with values from 0 to 1. Y axis reads f of pi). The curve of the graph has a high peak on the y-axis when pi equals to 0.9. The y-values are almost zero when pi is less than 0.50."}
+
+plot_beta(alpha = 10, beta = 2)
+```
+:::
+
+::::
+
+##
+
+
+ 
+```{r fig.align='center', fig.alt="X axis reads pi with values from 0 to 1. Y axis reads density. Three curves are shown labeled as prior, (scaled) likelihood, and posterior. The prior curve of the graph has a high peak on the y-axis when pi equals to 0.25 and y values are close to zero when pi is greater than 0.7. The likelihood curve has a high peak on the y-axis when pi equals to 0.95 and is quite peaked with low variance. The posterior sits between the prior and likelihood curves."}
+#| fig-align: center
+plot_beta_binomial(alpha = 3, beta = 8, y = 19, n = 20)
+```
+
+## 
+
+```{r, echo=FALSE, message=FALSE, cache=TRUE, fig.alt="3 by 3 prior, scaled likelihood, and posterior plots. In the first column of the plots data (thus the likelihood changes)  from 6 successes out of 13 trials to 29 out of 63 and then to 46 out of 99. All the likelihood curves have a similar pi value when y reaches its maximum. As sample size increases the posterior is closer and closer to the likelihood. Each row represents a different prior model including Beta(14, 1), Beta(5,11) and Beta(1,1) respectively from least peaked (informative) to flat. As the prior gets more informative (peaked) the posterior is closer to prior."}
+## Code for facet_wrapped Beta-Binomial plots
+### Plotting function
+beta_binom_grid_plot <- function(data, likelihood = FALSE, posterior = FALSE){
+  g <- ggplot(data, aes(x = pi, y = prior)) + 
+    geom_line() + 
+    geom_area(alpha = 0.5, aes(fill = "prior", x = pi, y = prior)) + 
+    scale_fill_manual("", values = c(prior = "#f0e442", 
+      `(scaled) likelihood` = "#0071b2", posterior = "#009e74"), breaks = c("prior", "(scaled) likelihood", "posterior")) + 
+    labs(x = expression(pi), y = "density") + 
+    theme(legend.position="bottom")
+  
+  if(likelihood == TRUE){
+    g <- g + 
+      geom_line(aes(x = pi, y = likelihood)) + 
+      geom_area(alpha = 0.5, aes(fill = "(scaled) likelihood", x = pi, y = likelihood))
+  }
+  
+  if(posterior == TRUE){
+    g <- g + 
+      geom_line(aes(x = pi, y = posterior)) + 
+      geom_area(alpha = 0.5, aes(fill = "posterior", x = pi, y = posterior)) 
+  }
+  g
+}
+make_plot_data <- function(as, bs, xs, ns, labs_prior, labs_likelihood){
+  ### Set up data to call in plot
+  # Refinement parameter
+  size <- 250
+  
+  # Model settings
+  pi <- rep(seq(0,1,length=size), 9)
+  
+  # Prior parameters
+  a <- rep(as, each = size*3)
+  b <- rep(bs, each = size*3)
+  # Data
+  x <- rep(rep(xs, each = size), 3)
+  n <- rep(rep(ns, each = size), 3)
+  # Posterior parameters
+  a_post <- x + a
+  b_post <- n - x + b
+  # Labels
+  setting_prior      <- as.factor(rep(1:3, each = size*3))
+  setting_likelihood <- as.factor(rep(rep(1:3, each = size), 3))
+  levels(setting_prior)      <- labs_prior
+  levels(setting_likelihood) <- labs_likelihood    
+  # Prior, likelihood, posterior functions
+  bfun1 <- function(x){dbinom(x = xs[1], size = ns[1], prob = x)}
+  bfun2 <- function(x){dbinom(x = xs[2], size = ns[2], prob = x)}
+  bfun3 <- function(x){dbinom(x = xs[3], size = ns[3], prob = x)}
+  scale   <- rep(rep(c(integrate(bfun1, 0, 1)[[1]], integrate(bfun2, 0, 1)[[1]], integrate(bfun3, 0, 1)[[1]]), each = size), 3)
+  prior      <- dbeta(x = pi, shape1 = a, shape2 = b)
+  likelihood <- dbinom(x = x, size = n, prob = pi) / scale
+  posterior  <- dbeta(x = pi, shape1 = a_post, shape2 = b_post)
+  # Combine into data frame
+  data.frame(setting_prior, setting_likelihood, pi, a, b, x, n, likelihood, prior, posterior)
+}
+plot_dat <- make_plot_data(
+  as = c(5,1,14), bs = c(11,1,1), 
+  xs = c(6,29,46), ns = c(13,63,99), 
+  labs_prior = c("prior: Beta(5,11)", "prior: Beta(1,1)", "prior: Beta(14,1)"), 
+  labs_likelihood = c("data: Y = 6 of n = 13", "data: Y = 29 of n = 63", "data: Y = 46 of n = 99"))
+```
+
+
+```{r echo = FALSE, fig.align='center', cache=TRUE}
+plot_dat_new <- plot_dat %>% 
+  mutate(setting_prior = factor(setting_prior, 
+                                levels = c("prior: Beta(14,1)", "prior: Beta(5,11)", "prior: Beta(1,1)")))
+beta_binom_grid_plot(plot_dat_new, posterior = TRUE, likelihood = TRUE) + 
+  facet_grid(setting_prior ~ setting_likelihood) +
+  theme(text = element_text(size=17)) 
+```
+
+##
+
+:::: {.columns}
+
+::: {.column width="50%"}
+### Plotting Functions
+
+`plot_beta()`   
+`plot_binomial_likelihood()`  
+`plot_beta_binomial`  
+
+`plot_gamma()`  
+`plot_poisson_likelihood()`  
+`plot_gamma_poisson()`  
+
+`plot_normal()`  
+`plot_normal_likelihood()`  
+`plot_normal_normal()`  
+
+:::
+
+::: {.column width="50%"}
+### Summary Functions
+
+`summarize_beta()`
+`summarize_beta_binomial()`  
+
+<br>
+
+`summarize_gamma()`
+`summarize_gamma_poisson()`  
+
+<br>
+
+
+`summarize_normal_normal()`
+
+
+
+:::
+
+::::
+
+## Model Evaluation Functions
+
+| Functions                                                        | Response     | Model Type |
+|------------------------------------------------------------------|--------------|------------|
+| `prediction_summary()` <br> `prediction_summary_cv()`                     | Quantitative | rstanreg   |
+| `classification_summary()` `classification_summary_cv()`             | Binary       | rstanreg   |
+| `naive_classification_summary()` `naive_classification_summary_cv()` | Categorical  | naiveBayes |
+
+
+
+## Prediction Summary
+
+
+```{r echo=FALSE, cache=TRUE}
+data <- data.frame(x = sample(1:100, 20)) 
+data$y <- data$x*3 + rnorm(20, 0, 5)
+model <- rstanarm::stan_glm(y ~ x,  data =data, refresh = FALSE, seed=84735)
+```
+
+
+
+:::: {.columns}
+
+::: {.column width="50%"}
+
+```{r cache=TRUE}
+prediction_summary(model, data, 
+                   prob_inner = 0.6, 
+                   prob_outer = 0.80)
+```
+
+:::
+
+::: {.column width="50%"}
+```{r cache=TRUE}
+prediction_summary_cv(model = model, 
+                      data = data, 
+                      k = 2, #<<
+                      prob_inner = 0.6, 
+                      prob_outer = 0.80)
+```
+:::
+
+::::
+
+## `library(rstan)`
+
+:::: {.columns}
+
+::: {.column width="50%"}
+```{r}
+# STEP 1: DEFINE the model
+stan_bike_model <- "
+  data {
+    int<lower=0> n;
+    vector[n] Y;
+    vector[n] X;
+  }
+  parameters {
+    real beta0;
+    real beta1;
+    real<lower=0> sigma;
+  }
+  model {
+    Y ~ normal(beta0 + beta1 * X, sigma);
+  }
+"
+```
+
+:::
+
+::: {.column width="50%"}
+```{r eval=FALSE}
+# STEP 2: SIMULATE the posterior
+stan_bike_sim <- 
+  stan(model_code = stan_bike_model, 
+  data = list(n = nrow(bikes), 
+              Y = bikes$rides, X = bikes$temp_feel), 
+  chains = 4, iter = 5000*2, seed = 84735)
+```
+:::
+
+::::
+
+## `library(rstanarm)`
+
+
+```{r eval=FALSE}
+normal_model_sim <- stan_glm(rides ~ temp_feel, 
+                             data = bikes, 
+                             family = gaussian, 
+                             chains = 4, iter = 5000*2,
+                             seed = 84735)
+```
+
+```{r cache=TRUE, echo=FALSE}
+normal_model_sim <- 
+  stan_glm(rides ~ temp_feel, 
+           data = bikes, 
+           family = gaussian, 
+           chains = 4, iter = 5000*2,
+           seed = 84735,
+           refresh = FALSE)
+```
+
+## `library(bayesplot)`
+
+:::: {.columns}
+
+::: {.column width="50%"}
+
+```{r out.width = "80%", fig.align='center'}
+mcmc_trace(normal_model_sim, size = 0.1)
+```
+
+:::
+
+::: {.column width="50%"}
+
+```{r out.width = "80%", fig.align='center'}
+mcmc_dens_overlay(normal_model_sim)
+```
+
+:::
+
+::::
+
+## Resources
+
+- [Undergraduate Bayesian Education Resources](https://undergrad-bayes.netlify.app/)
+
+
+
+- [Undergraduate Bayesian Education Network](https://undergrad-bayes.netlify.app/network.html)
+
+
+
+- [STATS 115 at UC Irvine](https://www.stats115.com)
+
 
 ## QUESTIONS?
 
@@ -482,7 +787,7 @@ readxl::read_xlsx("accessibility-checklist.xlsx") %>%
 
 `r fontawesome::fa(name = "github")` <a href = "http://github.com/mdogucu">mdogucu</a> 
 
-`r fontawesome::fa(name = "link")` <a href = "https://bsky.app/profile/minedogucu.bsky.social">minedogucu.bsky.social</a> 
+`r fontawesome::fa(name = "bluesky")` <a href = "https://bsky.app/profile/minedogucu.com">minedogucu.com</a> 
 
 `r fontawesome::fa(name = "mastodon")` <a href = "https://mastodon.social/@MineDogucu">mastodon.social/@MineDogucu</a> 
 
