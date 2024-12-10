@@ -1,9 +1,9 @@
 ---
-title: "XXXXX"
-author: "Mine Dogucu <br> University of California Irvine"
-date: "XXXXX"
-subtitle: "Talk at XXXX"
-footer: "mdogucu.github.io/XXXX"
+title: "Teaching and Learning Bayesian Statistics with {bayesrules}"
+author: "Mine Dogucu, PhD <br> University of California Irvine"
+date: "2024-12-11"
+subtitle: "Talk at the Department of Statistics, University of Auckland"
+footer: "mdogucu.github.io/auckland-24"
 format: 
   revealjs:
     slide-number: true
@@ -11,13 +11,479 @@ format:
     theme: ["style.scss"]
 ---
 
-## Slides
+```{r}
+#| label: setup
+#| include: false
+knitr::opts_chunk$set(echo = TRUE,
+                      comment="")
+```
+
+```{r}
+#| echo: false
+#| message: false
+library(tidyverse)
+library(bayesrules)
+library(rstanarm)
+library(bayesplot)
+library(kableExtra)
+theme_set(theme_gray(base_size = 18))
+```
+
+## About Me
+
+:::: {.columns}
+
+::: {.column width="50%"}
+
+```{r}
+#| echo: false
+#| fig-align: center
+#| out-width: 100%
+knitr::include_graphics("img/uc.png")
+```
+
+:::
+
+::: {.column width="50%"}
+
+- Faculty member in the Department of Statistics at University of California Irvine
+
+- UC Irvine campus is located on the homelands of the Acjachemen and Tongva peoples
+
+
+:::
+
+::::
+
+## About You
+
+???
+
+## About Bayesian Methods
+
+:::: {.columns}
+
+::: {.column width="50%"}
+
+Frequentist
+
+```{r}
+#| echo: false
+#| fig-align: center
+#| out-width: 100%
+knitr::include_graphics("img/freq-diagram.png")
+```
+
+:::
+
+::: {.column width="50%"}
+
+Bayesian 
+
+```{r}
+#| echo: false
+#| fig-align: center
+#| out-width: 100%
+knitr::include_graphics("img/bayes-diagram.png")
+```
+
+:::
+
+::::
+
+
+# An Overview of Undegraduate Bayesian Education 
+
+[Dogucu, M. & Hu, J. (2022) The Current State of Undergraduate Bayesian Education and Recommendations for the Future. The American Statistician, 74(2), 405-413.](https://www.tandfonline.com/doi/full/10.1080/00031305.2022.2089232)
+
+
+## Majors
+
+```{r}
+#| echo: false
+#| fig-align: center
+knitr::include_graphics("img/majors.png")
+```
+
+## Prerequisites
+
+```{r}
+#| echo: false
+#| fig-align: center
+knitr::include_graphics("img/prereq.jpeg")
+```
+
+# Why Teach Bayesian Methods?
+1. Intuition
+
+## Hypothesis Testing
+
+Suppose that during a recent doctor’s visit, you tested positive for a very rare disease. 
+
+$H_0$: no disease  
+$H_A$: disease
+
+If you only get to ask the doctor one question, which would it be?
+
+a. What’s the chance that I actually have the disease?  
+b. If in fact I don’t have the disease, what’s the chance that I would’ve gotten this positive test result?
+
+## Confidence Intervals
+
+```{r}
+#| echo: false
+#| fig-align: center
+knitr::include_graphics("img/confidence-intervals.png")
+```
+
+# Why Teach Bayesian Methods?
+2 – Perfect blend of statistics and computing
+
+## Metropolis-Hastings Algorithm
+
+```{r}
+#| echo: false
+#| fig-align: center
+knitr::include_graphics("img/mh.png")
+```
+
+# Why Teach Bayesian Methods?
+3 – Bayesian methods are becoming more common
+
+##
+
+```{r}
+#| echo: false
+#| fig-align: center
+knitr::include_graphics("img/andrews.png")
+```
+
+[Andrews, 2024](https://www.youtube.com/watch?v=PtLGnNvMC2o&ab_channel=TeachingandLearningMathematicsOnline)
+
+# Bayes Rules!
+
+## 
+
+:::: {.columns}
+
+::: {.column width="50%"}
+
+```{r}
+#| echo: false
+#| fig-align: center
+#| fig-alt: A headshot of a woman with long blonde hair wearing a brownish yellow tshirt and a red and pink floral silk scarf wrapped around her neck.
+#| out-width: 80%
+
+knitr::include_graphics("img/alicia.jpg")
+```
+
+<center>
+Alicia Johnson  
+Macalester College  
+[`r fontawesome::fa(name = "link")`](https://ajohns24.github.io/portfolio)
+[`r fontawesome::fa(name = "github")`](https://github.com/ajohns24)
+
+</center>
+
+:::
+
+::: {.column width="50%"}
+
+```{r}
+#| echo: false
+#| fig-align: center
+#| fig-alt: A headshot of a man with short dark hair, and a dark moustache. He is wearing a blue button up shirt and dark gray jacket
+#| out-width: 80%
+knitr::include_graphics("img/miles.png")
+```
+
+<center>
+Miles Ott  
+Tubi  
+[`r fontawesome::fa(name = "linkedin")`](https://www.linkedin.com/in/miles-ott/)
+[`r fontawesome::fa(name = "github")`](https://github.com/MilesOtt)
+
+</center>
+:::
+
+::::
+
+##
+
+```{r}
+#| echo: false
+#| fig-align: center
+#| out-width: 25%
+#| fig-alt: a hex shaped logo with shiny green-pink disco ball and purple starry background. There is text that says Bayes Rules!
+knitr::include_graphics("img/bayes-rules-hex.png")
+```
+
+<center>
+
+:::: {.columns}
+
+::: {.column width="50%"}
+
+<script src="https://use.fontawesome.com/releases/v5.15.1/js/all.js" data-auto-replace-svg="nest"></script>
+
+<i class="fas fa-book fa-2x" aria-hidden="true" title="Book icon"></i>
+
+[Bayes Rules! An Introduction to Bayesian Modeling with R](https://bayesrulesbook.com)
+
+:::
+
+::: {.column width="50%"}
+
+
+<i class="fab fa-r-project fa-2x" aria-hidden="true" title="R logo"></i>
+
+[{bayesrules}](https://www.github.com/bayes-rules/bayesrules)
+
+
+:::
+
+::::
+
+
+</center>
+
+## A quick example
+
+Let $\pi$ be the proportion of spam emails where $\pi \in [0, 1]$.
+
+. . .
+
+What do you think $\pi$ is? How certain are you?
+
+## Prior Model
+
+:::: {.columns}
+
+::: {.column width="50%"}
+
+```{r fig.align='center', fig.height=4, fig.alt="X axis reads pi with values from 0 to 1. Y axis reads f of pi). The curve of the graph has a high peak on the y-axis when pi equals to 0.5. The distribution is symmentric."}
+plot_beta(alpha = 4, beta = 4)
+```
+
+:::
+
+::: {.column width="50%"}
+
+```{r fig.align='center', fig.height=4, fig.alt="X axis reads pi with values from 0 to 1. Y axis reads f of pi). The curve of the graph has a high peak on the y-axis when pi equals to 0. The curve is a concave one and y is decreasing as pi is increasing."}
+plot_beta(alpha = 1, beta = 10)
+```
+
+:::
+
+::::
+
+## Binomial Likelihood
+
+```{r fig.align='center', fig.height=4, fig.alt="X axis reads pi with values from 0 to 1. Y axis reads l of pi given capital Y = y). The curve of the graph has a high peak on the y-axis when pi equals to 0.3. The y-values are almost zero when pi is greater than 0.75."}
+plot_binomial_likelihood(y = 3, n = 10)
+```
+
+
+## Posterior Model
+
+```{r fig.align='center', fig.height=4, fig.alt="X axis reads pi with values from 0 to 1. Y axis reads density. Three curves are shown labeled as prior, (scaled) likelihood, and posterior. The prior curve of the graph has a high peak on the y-axis when pi equals to 0. The curve is a concave one and y is decreasing as pi is increasing. The likelihood curve has a high peak on the y-axis when pi equals to 0.3. The y-values are almost zero when pi is greater than 0.75. The posterior sits between the prior and likelihood curves."}
+plot_beta_binomial(alpha = 1, beta = 10, y = 3, n = 10)
+```
+
+## Target Audience of the Book
+
+- Advanced Undergraduate Students in Statistics / Data Science Programs
+
+- Equally trained learners
+
+- Prior course/training in statistics is required
+
+- Familiarity with probability, calculus, and tidyverse is recommended.
+
+##
+
+::: {.panel-tabset}
+
+## Bayesian Foundations
+
+:::: {.columns}
+
+::: {.column width="50%"}
+Bayes' Rule
+
+The Beta-Binomial Bayesian Model
+
+Balance and Sequentiality in Bayesian Analysis
+
+Conjugate Families
+
+:::
+
+::: {.column width="50%"}
+
+```{r echo=FALSE, fig.align='center', fig.height=3, fig.width=4, fig.alt="three curves on a single plot with no axis labeled. It is coloring scheme indicates its similarity to the previous plot with prior, scaled likelihood and posterior"}
+
+plot_beta_binomial(1, 4, 13, 28) +
+  theme(panel.grid = element_blank(),
+        axis.title = element_blank(),
+        axis.text = element_blank(),
+        axis.ticks = element_blank(),
+        panel.background = element_blank(),
+        legend.position = "none") 
+```
+:::
+
+::::
+
+
+## Posterior Simulation & Analysis
+
+:::: {.columns}
+
+::: {.column width="50%"}
+
+```{r echo=FALSE, fig.align='center', out.width="100%", fig.alt="A traceplot with no axis labels. Traceplots have thin vertical lines with varying lengths."}
+knitr::include_graphics("img/unit2.png")
+```
+
+:::
+
+::: {.column width="50%"}
+Grid Approximation
+
+The Metropolis-Hastings Algorithm
+
+Posterior Estimation
+
+Posterior Hypothesis Testing
+
+Posterior Prediction
+:::
+
+::::
+
+## Regression and Classification
+
+:::: {.columns}
+
+::: {.column width="50%"}
+
+```{r echo=FALSE, fig.align='center', out.width="100%", fig.alt="A scatterplot with multiple regression lines passing through points. These regression lines are not all over the place, they are clustered with similar but varyin intercepts and slopes."}
+knitr::include_graphics("img/unit3.png")
+```
+
+:::
+
+::: {.column width="50%"}
+
+Normal Regression 
+
+Poisson and Negative Binomial Regression 
+
+Logistic Regression  
+
+Naive Bayes Classification
+
+:::
+
+::::
+
+## Hierarchical Models
+
+:::: {.columns}
+
+::: {.column width="50%"}
+```{r echo=FALSE, fig.align='center', out.width="100%", fig.alt="a figure showing hierarchy with a rectangle on top. With a set of arrows pointing downwards leading to a set of rectangles below which also have a set of arrows pointing downwards leading to a different set of rectangles."}
+knitr::include_graphics("img/unit4.png")
+```
+:::
+
+::: {.column width="50%"}
+Normal hierarchical models without predictors
+
+Normal hierarchical models with predictors
+
+Non-Normal Hierarchical Regression & Classification
+:::
+
+::::
+
+:::
+
+
+# Pedagogical Approach
+
+## Checking Intuition
+
+
+```{r echo=FALSE, fig.align='center', out.width="80%", fig.alt="There are two ellipses at the top of the image. The first ellipse reads 'Prior: Only 40% of articles are fake'. The second ellipse reads 'Data: Exclamation points are more common among fake news'. There are two arrows each from the upper two ellipses leading to a third ellipse in the lower part of the image. The third ellipse reads 'Posterior: Is the article fake or not?'"}
+knitr::include_graphics("img/fake-news-diagram.png")
+```
+
+
+##
+
+Active learning with quizzes
+
+. . .
+
+
+Hands-on programming
+
+. . .
+
+Computing and Math Together
+
+. . .
+
+Compute for a Single Case then use built in functions
+
+
+
+## Accessibility and Inclusion
+
+```{r checklist, echo=FALSE}
+options(knitr.kable.NA = '')
+readxl::read_xlsx("accessibility-checklist.xlsx") %>%  
+  slice(1:3) %>% 
+  knitr::kable() 
+  
+```
+
+
+##
+
+```{r checklist2, echo=FALSE}
+
+readxl::read_xlsx("accessibility-checklist.xlsx") %>%  
+  slice(4:5) %>% 
+  knitr::kable() 
+  
+```
+
+##
+
+```{r checklist3, echo=FALSE}
+
+readxl::read_xlsx("accessibility-checklist.xlsx") %>%  
+  slice(6:11) %>% 
+  knitr::kable() 
+  
+```
+
+##
+
+[Dogucu, M., Johnson, A. A., & Ott, M. (2023). Framework for Accessible and Inclusive Teaching Materials for Statistics and Data Science Courses. Journal of Statistics and Data Science Education, 31(2), 144–150. https://doi.org/10.1080/26939169.2023.2165988](https://www.tandfonline.com/doi/full/10.1080/26939169.2023.2165988)
 
 ## QUESTIONS?
+
 `r fontawesome::fa(name = "link")`
-<a href = "http://minedogucu.com">minedogucu.com</a>  
-`r fontawesome::fa(name = "github")` <a href = "http://github.com/mdogucu">mdogucu</a>   
-`r fontawesome::fa(name = "twitter")` <a href = "http://twitter.com/MineDogucu">MineDogucu</a>  
-`r fontawesome::fa(name = "mastodon")` <a href = "https://mastodon.social/@MineDogucu">mastodon.social/@MineDogucu</a>  
-`r fontawesome::fa(name = "link")` <a href = "https://bsky.app/profile/minedogucu.bsky.social">minedogucu.bsky.social</a>  
+<a href = "http://minedogucu.com">minedogucu.com</a>   
+
+`r fontawesome::fa(name = "github")` <a href = "http://github.com/mdogucu">mdogucu</a> 
+
+`r fontawesome::fa(name = "link")` <a href = "https://bsky.app/profile/minedogucu.bsky.social">minedogucu.bsky.social</a> 
+
+`r fontawesome::fa(name = "mastodon")` <a href = "https://mastodon.social/@MineDogucu">mastodon.social/@MineDogucu</a> 
+
 `r fontawesome::fa(name = "linkedin")` <a href = "https://www.linkedin.com/in/minedogucu/">minedogucu</a> 
